@@ -5,6 +5,7 @@
 
 #include "Exponentials.h"
 #include "HyperionUtils/Concepts.h"
+#include "HyperionUtils/Macros.h"
 #include "HyperionUtils/OptionAndResult.h"
 
 namespace hyperion::math {
@@ -20,6 +21,7 @@ namespace hyperion::math {
 		Exponential
 	};
 
+	IGNORE_PADDING_START
 	/// @brief Interpolates from a starting value to a final value in the way prescribed by `Type`
 	/// @note `T` must be a floating point type
 	/// @note The start value must be in [0, target value] and the target value must be > 0
@@ -260,5 +262,6 @@ namespace hyperion::math {
 											* m_transition_lengthSeconds);
 		}
 	};
+	IGNORE_PADDING_STOP
 
 } // namespace hyperion::math
