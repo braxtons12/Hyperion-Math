@@ -387,7 +387,7 @@ namespace hyperion::math {
 					  + static_cast<double>(x >= 0.0)
 							* 7.3890560989306502272304274605750078131803155705518473240871278225;
 				const auto subtractor
-					= static_cast<float>(x < 0.0) * -2.0 + static_cast<float>(x > 0.0) * 2.0;
+					= static_cast<double>(x < 0.0) * -2.0 + static_cast<double>(x > 0.0) * 2.0;
 				return exp_internal(x - subtractor) * multiplier;
 			}
 			else {
