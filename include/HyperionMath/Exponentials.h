@@ -187,7 +187,7 @@ namespace hyperion::math {
 		/// @param x - The exponent
 		/// @return - e^x
 		[[nodiscard]] inline static constexpr auto expf_internal(float x) noexcept -> float {
-			const auto condition = static_cast<float>(x < -5.0F || x > 3.0F);
+			const auto condition = x < -5.0F || x > 3.0F;
 			const auto sign
 				= static_cast<float>(x < 0.0F) * -1.0F + static_cast<float>(x >= 0.0f) * 1.0F;
 			if(condition) {
