@@ -191,7 +191,7 @@ namespace hyperion::math {
 			const auto sign
 				= static_cast<float>(x < 0.0F) * -1.0F + static_cast<float>(x >= 0.0f) * 1.0F;
 			return condition * (expf_internal(x - sign * 3.0F) * exp_helperf(sign * 3.0F))
-				   + (1.0F - condition) * expf_helper(x);
+				   + (1.0F - condition) * exp_helperf(x);
 			// if(x < -10.0F) {
 			//	return 0.0000453999297624848515355915155605506102379180888665649692590713F
 			//		   * exp_helperf(x + 10.0F);
