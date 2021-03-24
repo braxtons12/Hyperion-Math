@@ -9,8 +9,8 @@
 #include "HyperionUtils/Concepts.h"
 #include "HyperionUtils/OptionAndResult.h"
 
-namespace hyperion::utils {
-	using concepts::FloatingPoint;
+namespace hyperion::math {
+	using utils::concepts::FloatingPoint;
 	/// @brief The possible kinds of value interpolation possible by `Interpolator`
 	enum class InterpolationType
 	{
@@ -255,4 +255,4 @@ namespace hyperion::utils {
 		}
 	};
 
-} // namespace hyperion::utils
+} // namespace hyperion::math

@@ -8,8 +8,8 @@
 #include "TestConstants.h"
 #include "gtest/gtest.h"
 
-namespace math::test {
-	using ::test::FLOAT_ACCEPTED_ERROR;
+namespace hyperion::math::test {
+	using test::FLOAT_ACCEPTED_ERROR;
 
 	TEST(ExponentialsTestFloat, frexpfCase1) {
 		float input = 1.0F;
@@ -200,4 +200,4 @@ namespace math::test {
 					std::pow(base, exponent),
 					FLOAT_ACCEPTED_ERROR + 0.0001); // close enough
 	}
-} // namespace math::test
+} // namespace hyperion::math::test

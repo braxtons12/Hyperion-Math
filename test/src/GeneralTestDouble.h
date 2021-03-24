@@ -10,8 +10,8 @@
 #include "TestConstants.h"
 #include "gtest/gtest.h"
 
-namespace math::test {
-	using ::test::DOUBLE_ACCEPTED_ERROR;
+namespace hyperion::math::test {
+	using test::DOUBLE_ACCEPTED_ERROR;
 
 	TEST(GeneralTestDouble, sqrtCase1) {
 		double input = 1.0;
@@ -150,4 +150,4 @@ namespace math::test {
 		double input = -1.5;
 		ASSERT_EQ(General::roundU(input), std::numeric_limits<size_t>::max());
 	}
-} // namespace math::test
+} // namespace hyperion::math::test

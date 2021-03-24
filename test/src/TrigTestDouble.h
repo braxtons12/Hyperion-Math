@@ -8,8 +8,8 @@
 #include "TestConstants.h"
 #include "gtest/gtest.h"
 
-namespace math::test {
-	using ::test::DOUBLE_ACCEPTED_ERROR;
+namespace hyperion::math::test {
+	using test::DOUBLE_ACCEPTED_ERROR;
 
 	TEST(TrigFuncsTestDouble, cosCase1) {
 		double input = Constants<double>::pi;
@@ -110,4 +110,4 @@ namespace math::test {
 		double input = -Constants<double>::piOver4;
 		ASSERT_NEAR(Trig::tanh(input), std::tanh(input), DOUBLE_ACCEPTED_ERROR);
 	}
-} // namespace math::test
+} // namespace hyperion::math::test

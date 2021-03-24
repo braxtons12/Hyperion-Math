@@ -8,8 +8,8 @@
 #include "TestConstants.h"
 #include "gtest/gtest.h"
 
-namespace math::test {
-	using ::test::FLOAT_ACCEPTED_ERROR;
+namespace hyperion::math::test {
+	using test::FLOAT_ACCEPTED_ERROR;
 
 	TEST(TrigFuncsTestFloat, cosfCase1) {
 		float input = Constants<>::pi;
@@ -110,4 +110,4 @@ namespace math::test {
 		float input = -Constants<>::piOver4;
 		ASSERT_NEAR(Trig::tanh(input), std::tanh(input), FLOAT_ACCEPTED_ERROR);
 	}
-} // namespace math::test
+} // namespace hyperion::math::test

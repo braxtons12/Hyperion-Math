@@ -5,7 +5,7 @@
 #include "HyperionMath/General.h"
 #include "HyperionMath/Interpolator.h"
 
-namespace apex::utils::test {
+namespace hyperion::math::test {
 
 	TEST(InterpolatorTest, linearInterpolator) {
 		auto interp = Interpolator<float, InterpolationType::Linear>(1.0F, 0.0F, 1.0F, 10ULL);
@@ -33,4 +33,4 @@ namespace apex::utils::test {
 		ASSERT_TRUE(math::General<float>::abs(interp.getNextValue(Some(size_t(10))) - percent99)
 					<= (1.0F - percent99));
 	}
-} // namespace apex::utils::test
+} // namespace hyperion::math::test

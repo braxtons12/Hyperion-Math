@@ -5,9 +5,9 @@
 #include "HyperionMath/Vec3.h"
 #include "TestConstants.h"
 
-namespace math::test {
-	using ::test::DOUBLE_ACCEPTED_ERROR;
-	using ::test::FLOAT_ACCEPTED_ERROR;
+namespace hyperion::math::test {
+	using test::DOUBLE_ACCEPTED_ERROR;
+	using test::FLOAT_ACCEPTED_ERROR;
 
 	TEST(Vec3Test, magnitude) {
 		auto vec = Vec3(3.0F, 5.0F, 7.0F);
@@ -147,4 +147,4 @@ namespace math::test {
 		vec /= 2.5;
 		ASSERT_EQ(vec, Vec3(1, 2, 2));
 	}
-} // namespace math::test
+} // namespace hyperion::math::test

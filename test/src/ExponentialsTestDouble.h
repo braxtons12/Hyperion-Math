@@ -8,8 +8,8 @@
 #include "TestConstants.h"
 #include "gtest/gtest.h"
 
-namespace math::test {
-	using ::test::DOUBLE_ACCEPTED_ERROR;
+namespace hyperion::math::test {
+	using test::DOUBLE_ACCEPTED_ERROR;
 
 	TEST(ExponentialsTestDouble, rexpCase1) {
 		double input = 1.0;
@@ -192,4 +192,4 @@ namespace math::test {
 					std::pow(base, exponent),
 					DOUBLE_ACCEPTED_ERROR); // close enough
 	}
-} // namespace math::test
+} // namespace hyperion::math::test
