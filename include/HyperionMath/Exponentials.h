@@ -137,6 +137,8 @@ namespace hyperion::math {
 		  /// @brief Calculates the mantissa and exponent of `x`,
 		  /// in the representation x = mantissa * 2^exponent
 		  ///
+		  /// This seems to be a common knowledge implementation and was found in several cstdlibs
+		  ///
 		  /// @param x - The value to calculate the mantissa and exponent for
 		  /// @param e - The `int` to store the exponent in
 		  /// @return - The mantissa
@@ -170,6 +172,8 @@ namespace hyperion::math {
 
 		/// @brief Helper function for `expf`; Don't use on its own
 		///
+		/// This is a Pade approximation accurate in (-6, 4)
+		///
 		/// @param x - the exponent
 		/// @return - e^x
 		[[nodiscard]] inline static constexpr auto exp_helperf(float x) noexcept -> float {
@@ -183,77 +187,82 @@ namespace hyperion::math {
 		/// @param x - The exponent
 		/// @return - e^x
 		[[nodiscard]] inline static constexpr auto expf_internal(float x) noexcept -> float {
-			if(x < -10.0F) {
-				return 0.0000453999297624848515355915155605506102379180888665649692590713F
-					   * exp_helperf(x + 10.0F);
-			}
-			else if(x < -8.0F) {
-				return 0.0003354626279025118388213891257808610193109001337203193605445757F
-					   * exp_helperf(x + 8.0F);
-			}
-			else if(x < -6.0F) {
-				return 0.0024787521766663584230451674308166678915064795855339450508786240F
-					   * exp_helperf(x + 6.0F);
-			}
-			else if(x < -4.0F) {
-				return 0.0183156388887341802937180212732412422119120675534755947695999274F
-					   * exp_helperf(x + 4.0F);
-			}
-			else if(x < -2.0F) {
-				return 0.1353352832366126918939994949724844034076315459095758814681588726F
-					   * exp_helperf(x + 2.0F);
-			}
-			else if(x < -1.0F) {
-				return 0.3678794411714423215955237701614608674458111310317678345078368016F
-					   * exp_helperf(x + 1.0F);
-			}
-			else if(x < -0.5F) {
-				return 0.6065306597126334236037995349911804534419181354871869556828921587F
-					   * exp_helperf(x + 0.5F);
-			}
-			else if(x < 0.0F) {
-				return exp_helperf(x);
-			}
-			else if(x < 0.5F) {
-				return 1.6487212707001281468486507878141635716537761007101480115750793116F
-					   * exp_helperf(x - 0.5F);
-			}
-			else if(x < 1.0F) {
-				return 2.7182818284590452353602874713526624977572470936999595749669676277F
-					   * exp_helperf(x - 1.0F);
-			}
-			else if(x < 2.0F) {
-				return 7.3890560989306502272304274605750078131803155705518473240871278225F
-					   * exp_helperf(x - 2.0F);
-			}
-			else if(x < 4.0F) {
-				return 54.598150033144239078110261202860878402790737038614068725826593958F
-					   * exp_helperf(x - 4.0F);
-			}
-			else if(x < 6.0F) {
-				return 403.42879349273512260838718054338827960589989735712920261396718832F
-					   * exp_helperf(x - 6.0F);
-			}
-			else if(x < 8.0F) {
-				return 2980.9579870417282747435920994528886737559679391328357022089635303F
-					   * exp_helperf(x - 8.0F);
-			}
-			else if(x < 10.0F) {
-				return 22026.465794806716516957900645284244366353512618556781074235426355F
-					   * exp_helperf(x - 10.0F);
-			}
-			else if(x < 12.0F) {
-				return 162754.79141900392080800520489848678317020928447872077044355624813F
-					   * exp_helperf(x - 12.0F);
-			}
-			else if(x < 14.0F) {
-				return 1.20260428416477677774923677076785944941248654337610224031329063319746294708334267090364192964387639735347548429722417178408e6F
-					   * exp_helperf(x - 14.0F);
-			}
-			else {
-				return 8.88611052050787263676302374078145035080271982185663883978398831704898093732147815044322210668583770720728203634546243561856e6F
-					   * exp_helperf(x - 16.0F);
-			}
+			const auto condition = static_cast<float>(x < -5.0F || x > 3.0F);
+			const auto sign
+				= static_cast<float>(x < 0.0F) * -1.0F + static_cast<float>(x >= 0.0f) * 1.0F;
+			return condition * (expf_internal(x - sign * 3.0F) * exp_helperf(sign * 3.0F))
+				   + (1.0F - condition) * expf_helper(x);
+			// if(x < -10.0F) {
+			//	return 0.0000453999297624848515355915155605506102379180888665649692590713F
+			//		   * exp_helperf(x + 10.0F);
+			// }
+			// else if(x < -8.0F) {
+			//	return 0.0003354626279025118388213891257808610193109001337203193605445757F
+			//		   * exp_helperf(x + 8.0F);
+			// }
+			// else if(x < -6.0F) {
+			//	return 0.0024787521766663584230451674308166678915064795855339450508786240F
+			//		   * exp_helperf(x + 6.0F);
+			// }
+			// else if(x < -4.0F) {
+			//	return 0.0183156388887341802937180212732412422119120675534755947695999274F
+			//		   * exp_helperf(x + 4.0F);
+			// }
+			// else if(x < -2.0F) {
+			//	return 0.1353352832366126918939994949724844034076315459095758814681588726F
+			//		   * exp_helperf(x + 2.0F);
+			// }
+			// else if(x < -1.0F) {
+			//	return 0.3678794411714423215955237701614608674458111310317678345078368016F
+			//		   * exp_helperf(x + 1.0F);
+			// }
+			// else if(x < -0.5F) {
+			//	return 0.6065306597126334236037995349911804534419181354871869556828921587F
+			//		   * exp_helperf(x + 0.5F);
+			// }
+			// else if(x < 0.0F) {
+			//	return exp_helperf(x);
+			// }
+			// else if(x < 0.5F) {
+			//	return 1.6487212707001281468486507878141635716537761007101480115750793116F
+			//		   * exp_helperf(x - 0.5F);
+			// }
+			// else if(x < 1.0F) {
+			//	return 2.7182818284590452353602874713526624977572470936999595749669676277F
+			//		   * exp_helperf(x - 1.0F);
+			// }
+			// else if(x < 2.0F) {
+			//	return 7.3890560989306502272304274605750078131803155705518473240871278225F
+			//		   * exp_helperf(x - 2.0F);
+			// }
+			// else if(x < 4.0F) {
+			//	return 54.598150033144239078110261202860878402790737038614068725826593958F
+			//		   * exp_helperf(x - 4.0F);
+			// }
+			// else if(x < 6.0F) {
+			//	return 403.42879349273512260838718054338827960589989735712920261396718832F
+			//		   * exp_helperf(x - 6.0F);
+			// }
+			// else if(x < 8.0F) {
+			//	return 2980.9579870417282747435920994528886737559679391328357022089635303F
+			//		   * exp_helperf(x - 8.0F);
+			// }
+			// else if(x < 10.0F) {
+			//	return 22026.465794806716516957900645284244366353512618556781074235426355F
+			//		   * exp_helperf(x - 10.0F);
+			// }
+			// else if(x < 12.0F) {
+			//	return 162754.79141900392080800520489848678317020928447872077044355624813F
+			//		   * exp_helperf(x - 12.0F);
+			// }
+			// else if(x < 14.0F) {
+			//	return 1.20260428416477677774923677076785944941248654337610224031329063319746294708334267090364192964387639735347548429722417178408e6F
+			//		   * exp_helperf(x - 14.0F);
+			// }
+			// else {
+			//	return 8.88611052050787263676302374078145035080271982185663883978398831704898093732147815044322210668583770720728203634546243561856e6F
+			//		   * exp_helperf(x - 16.0F);
+			// }
 		}
 
 		/// @brief Helper function to lnf. Performs ln(x + 1), accurate in -0.8 <= x <= 5
