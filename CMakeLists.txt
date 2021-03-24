@@ -95,7 +95,7 @@ set(EXPORTS
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Point2.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Point3.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Random.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/TrigFuncs.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Trig.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Vec2.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Vec3.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/HyperionMath.h"

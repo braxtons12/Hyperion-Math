@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-#include "../utils/Concepts.h"
+#include "HyperionUtils/Concepts.h"
 
-namespace math {
+namespace hyperion::math {
 #ifndef _MSC_VER
 	using std::int32_t;
 	using std::size_t;
@@ -157,4 +157,4 @@ namespace math {
 			return x * u.f;						   // NOLINT
 		}
 	};
-} // namespace math
+} // namespace hyperion::math

@@ -3,11 +3,11 @@
 #include <gsl/gsl>
 #include <iostream>
 
-#include "../utils/Concepts.h"
 #include "General.h"
+#include "HyperionUtils/Concepts.h"
 #include "Random.h"
 
-namespace math {
+namespace hyperion::math {
 	using gsl::narrow_cast;
 	using utils::concepts::SignedNumeric, utils::concepts::Integral,
 		utils::concepts::SignedIntegral, utils::concepts::FloatingPoint;
@@ -408,4 +408,4 @@ namespace math {
 	template<SignedIntegral T>
 	explicit Vec3(T, T, T) -> Vec3<T>;
 
-} // namespace math
+} // namespace hyperion::math

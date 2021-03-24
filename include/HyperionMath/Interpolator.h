@@ -5,11 +5,11 @@
 #include <gsl/gsl>
 #include <tuple>
 
-#include "../math/Exponentials.h"
-#include "Concepts.h"
-#include "OptionAndResult.h"
+#include "Exponentials.h"
+#include "HyperionUtils/Concepts.h"
+#include "HyperionUtils/OptionAndResult.h"
 
-namespace apex::utils {
+namespace hyperion::utils {
 	using concepts::FloatingPoint;
 	/// @brief The possible kinds of value interpolation possible by `Interpolator`
 	enum class InterpolationType
@@ -43,7 +43,7 @@ namespace apex::utils {
 			: mTargetValue(targetValue), mLinearTransitionStep((mTargetValue - mInitialValue)
 															   / (gsl::narrow_cast<T>(mSampleRate)
 																  * mTransitionLengthSeconds)),
-																  mSamplesToTransition(getSamplesToTransition()) {
+			  mSamplesToTransition(getSamplesToTransition()) {
 		}
 
 		/// @brief Creates an `Interpolator` with the given target value and sample rate
@@ -55,7 +55,7 @@ namespace apex::utils {
 			  mLinearTransitionStep(
 				  (mTargetValue - mInitialValue)
 				  / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds)),
-				  mSamplesToTransition(getSamplesToTransition()) {
+			  mSamplesToTransition(getSamplesToTransition()) {
 		}
 
 		/// @brief Creates an `Interpolator` with the given target and initial values, and sample
@@ -70,7 +70,7 @@ namespace apex::utils {
 			  mLinearTransitionStep(
 				  (mTargetValue - mInitialValue)
 				  / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds)),
-				  mSamplesToTransition(getSamplesToTransition()) {
+			  mSamplesToTransition(getSamplesToTransition()) {
 		}
 
 		/// @brief Creates an `Interpolator` with the given target and initial values, time to
@@ -89,7 +89,7 @@ namespace apex::utils {
 			  mLinearTransitionStep(
 				  (mTargetValue - mInitialValue)
 				  / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds)),
-				  mSamplesToTransition(getSamplesToTransition()) {
+			  mSamplesToTransition(getSamplesToTransition()) {
 		}
 		constexpr Interpolator(const Interpolator& interpolator) noexcept = default;
 		constexpr Interpolator(Interpolator&& interpolator) noexcept = default;
@@ -255,4 +255,4 @@ namespace apex::utils {
 		}
 	};
 
-} // namespace apex::utils
+} // namespace hyperion::utils

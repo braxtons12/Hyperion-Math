@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "../utils/Concepts.h"
+#include "HyperionUtils/Concepts.h"
 
 namespace hyperion::math {
 	using utils::concepts::FloatingPoint;

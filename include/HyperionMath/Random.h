@@ -7,9 +7,9 @@
 #include <limits>
 #include <random>
 
-#include "../utils/Concepts.h"
+#include "HyperionUtils/Concepts.h"
 
-namespace math {
+namespace hyperion::math {
 	using gsl::narrow_cast;
 #ifndef _MSC_VER
 	using std::size_t;
@@ -312,4 +312,4 @@ namespace math {
 
 		return GLOBAL_UNIFORM_DISTRIBUTION<T>();
 	}
-} // namespace math
+} // namespace hyperion::math

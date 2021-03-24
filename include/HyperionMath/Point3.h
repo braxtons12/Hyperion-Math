@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-#include "../utils/Concepts.h"
+#include "HyperionUtils/Concepts.h"
 #include "Vec3.h"
 
-namespace math {
+namespace hyperion::math {
 	using math::Vec3;
 	using math::Vec3Idx;
 	using ::utils::concepts::FloatingPoint;
@@ -154,4 +154,4 @@ namespace math {
 	template<SignedIntegral T>
 	explicit Point3(T, T, T) -> Point3<T>;
 
-} // namespace math
+} // namespace hyperion::math

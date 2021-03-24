@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../utils/Concepts.h"
 #include "Constants.h"
 #include "General.h"
+#include "HyperionUtils/Concepts.h"
 
-namespace math {
+namespace hyperion::math {
 
 	using utils::concepts::FloatingPoint;
 
@@ -452,4 +452,4 @@ namespace math {
 			}
 		}
 	};
-} // namespace math
+} // namespace hyperion::math

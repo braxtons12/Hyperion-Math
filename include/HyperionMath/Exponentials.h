@@ -2,10 +2,10 @@
 
 #include <cstdint>
 
-#include "../utils/Concepts.h"
 #include "General.h"
+#include "HyperionUtils/Concepts.h"
 
-namespace math {
+namespace hyperion::math {
 
 #ifndef _MSC_VER
 	using std::uint32_t;
@@ -631,4 +631,4 @@ namespace math {
 			return pow2_internal(exponent * log2_internal(base));
 		}
 	};
-} // namespace math
+} // namespace hyperion::math

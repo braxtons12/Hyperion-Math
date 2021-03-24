@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-#include "../utils/Concepts.h"
+#include "HyperionUtils/Concepts.h"
 #include "Vec2.h"
 
-namespace math {
+namespace hyperion::math {
 	using math::Vec2;
 	using math::Vec2Idx;
 	using ::utils::concepts::FloatingPoint;
@@ -147,4 +147,4 @@ namespace math {
 	template<SignedIntegral T>
 	explicit Point2(T, T) -> Point2<T>;
 
-} // namespace math
+} // namespace hyperion::math
