@@ -1,15 +1,14 @@
 #pragma once
 
-#include <type_traits>
-// for std::ignore
 #include <gsl/gsl>
-#include <tuple>
+#include <type_traits>
 
 #include "Exponentials.h"
 #include "HyperionUtils/Concepts.h"
 #include "HyperionUtils/OptionAndResult.h"
 
 namespace hyperion::math {
+	using utils::Option;
 	using utils::concepts::FloatingPoint;
 	/// @brief The possible kinds of value interpolation possible by `Interpolator`
 	enum class InterpolationType
@@ -40,10 +39,11 @@ namespace hyperion::math {
 		///
 		/// @param targetValue - The target final value to interpolate to
 		constexpr explicit Interpolator(T targetValue) noexcept
-			: mTargetValue(targetValue), mLinearTransitionStep((mTargetValue - mInitialValue)
-															   / (gsl::narrow_cast<T>(mSampleRate)
-																  * mTransitionLengthSeconds)),
-			  mSamplesToTransition(getSamplesToTransition()) {
+			: m_target_value(targetValue),
+			  mLinearTransitionStep(
+				  (m_target_value - m_initial_value)
+				  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds)),
+			  m_samples_to_transition(get_samples_to_transition()) {
 		}
 
 		/// @brief Creates an `Interpolator` with the given target value and sample rate
@@ -51,45 +51,46 @@ namespace hyperion::math {
 		/// @param targetValue - The target final value to interpolate to
 		/// @param sampleRate - The sample rate to process at
 		constexpr explicit Interpolator(T targetValue, size_t sampleRate) noexcept
-			: mSampleRate(sampleRate), mTargetValue(targetValue),
+			: m_sample_rate(sampleRate), m_target_value(targetValue),
 			  mLinearTransitionStep(
-				  (mTargetValue - mInitialValue)
-				  / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds)),
-			  mSamplesToTransition(getSamplesToTransition()) {
+				  (m_target_value - m_initial_value)
+				  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds)),
+			  m_samples_to_transition(get_samples_to_transition()) {
 		}
 
 		/// @brief Creates an `Interpolator` with the given target and initial values, and sample
 		/// rate
 		///
 		/// @param targetValue - The target final value to interpolate to
-		/// @param initialValue - The initial value to start interpolation from
+		/// @param initial_value - The initial value to start interpolation from
 		/// @param sampleRate - The sample rate to process at
-		constexpr Interpolator(T targetValue, T initialValue, size_t sampleRate) noexcept
-			: mSampleRate(sampleRate), mTargetValue(targetValue), mCurrentValue(initialValue),
-			  mInitialValue(mCurrentValue),
+		constexpr Interpolator(T targetValue, T initial_value, size_t sampleRate) noexcept
+			: m_sample_rate(sampleRate), m_target_value(targetValue),
+			  m_current_value(initial_value), m_initial_value(m_current_value),
 			  mLinearTransitionStep(
-				  (mTargetValue - mInitialValue)
-				  / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds)),
-			  mSamplesToTransition(getSamplesToTransition()) {
+				  (m_target_value - m_initial_value)
+				  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds)),
+			  m_samples_to_transition(get_samples_to_transition()) {
 		}
 
 		/// @brief Creates an `Interpolator` with the given target and initial values, time to
 		/// interpolate over, and sample rate
 		///
 		/// @param targetValue - The target final value to interpolate to
-		/// @param initialValue - The initial value to start interpolation from
+		/// @param initial_value - The initial value to start interpolation from
 		/// @param transitionLengthSeconds - The transition time to interpolate over
 		/// @param sampleRate - The sample rate to process at
 		constexpr Interpolator(T targetValue,
-							   T initialValue,
+							   T initial_value,
 							   T transitionLengthSeconds,
 							   size_t sampleRate) noexcept
-			: mSampleRate(sampleRate), mTargetValue(targetValue), mCurrentValue(initialValue),
-			  mInitialValue(mCurrentValue), mTransitionLengthSeconds(transitionLengthSeconds),
+			: m_sample_rate(sampleRate), m_target_value(targetValue),
+			  m_current_value(initial_value), m_initial_value(m_current_value),
+			  m_transition_lengthSeconds(transitionLengthSeconds),
 			  mLinearTransitionStep(
-				  (mTargetValue - mInitialValue)
-				  / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds)),
-			  mSamplesToTransition(getSamplesToTransition()) {
+				  (m_target_value - m_initial_value)
+				  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds)),
+			  m_samples_to_transition(get_samples_to_transition()) {
 		}
 		constexpr Interpolator(const Interpolator& interpolator) noexcept = default;
 		constexpr Interpolator(Interpolator&& interpolator) noexcept = default;
@@ -102,68 +103,71 @@ namespace hyperion::math {
 		/// @param currentSample - The (optional) sample in the sequence to get the value for
 		///
 		/// @return - The interpolation value
-		inline auto getNextValue(Option<size_t> currentSample = None()) noexcept -> T {
-			if(currentSample.isSome()) {
-				mCurrentTransitionSample = currentSample.unwrap();
+		inline auto get_next_value(Option<size_t> currentSample = None()) noexcept -> T {
+			if(currentSample.is_some()) {
+				m_current_transition_sample = currentSample.unwrap();
 			}
 
-			if(mCurrentTransitionSample <= mSamplesToTransition) {
-				mCurrentValue = interpolate(mCurrentTransitionSample);
-				mCurrentTransitionSample++;
+			if(m_current_transition_sample <= m_samples_to_transition) {
+				m_current_value = interpolate(m_current_transition_sample);
+				m_current_transition_sample++;
 			}
 
-			return mCurrentValue;
+			return m_current_value;
 		}
 
 		/// @brief Resets the `Interpolator`.
-		/// - If `initialValue` is given, the `Interpolator` will start at the given one instead of
+		/// - If `initial_value` is given, the `Interpolator` will start at the given one instead of
 		/// `DEFAULT_INITIAL_VALUE`
 		/// - If `transitionLengthSeconds` is also given, the `Interpolator` will interpolate over
 		/// that length of time instead of the current one
 		///
-		/// @param initialValue - The initial value to start interpolation from
+		/// @param initial_value - The initial value to start interpolation from
 		/// @param transitionLengthSeconds - The transition time to interpolate over
 		inline auto
-		reset(Option<T> initialValue, Option<T> transitionLengthSeconds) noexcept -> void {
-			if(initialValue.isSome()) {
-				mCurrentValue = initialValue.unwrap();
-				mInitialValue = mCurrentValue;
+		reset(Option<T> initial_value, Option<T> transitionLengthSeconds) noexcept -> void {
+			if(initial_value.is_some()) {
+				m_current_value = initial_value.unwrap();
+				m_initial_value = m_current_value;
 			}
 			else {
-				mCurrentValue = DEFAULT_INITIAL_VALUE;
-				mInitialValue = mCurrentValue;
+				m_current_value = DEFAULT_INITIAL_VALUE;
+				m_initial_value = m_current_value;
 			}
 
-			if(transitionLengthSeconds.isSome()) {
-				mTransitionLengthSeconds = transitionLengthSeconds.unwrap();
+			if(transitionLengthSeconds.is_some()) {
+				m_transition_lengthSeconds = transitionLengthSeconds.unwrap();
 			}
 
-			mLinearTransitionStep = (mTargetValue - mCurrentValue)
-									/ (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds);
-			mSamplesToTransition = getSamplesToTransition();
-			mCurrentTransitionSample = 0ULL;
+			mLinearTransitionStep
+				= (m_target_value - m_current_value)
+				  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds);
+			m_samples_to_transition = get_samples_to_transition();
+			m_current_transition_sample = 0ULL;
 		}
 
 		/// @brief Sets the target value to interpolate to, to the given one
 		///
 		/// @param targetValue - The value to interpolate to
-		constexpr inline auto setTarget(T targetValue) noexcept -> void {
-			mTargetValue = targetValue;
-			mInitialValue = mCurrentValue;
-			mLinearTransitionStep = (mTargetValue - mInitialValue)
-									/ (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds);
-			mSamplesToTransition = getSamplesToTransition();
+		constexpr inline auto set_target(T targetValue) noexcept -> void {
+			m_target_value = targetValue;
+			m_initial_value = m_current_value;
+			mLinearTransitionStep
+				= (m_target_value - m_initial_value)
+				  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds);
+			m_samples_to_transition = get_samples_to_transition();
 		}
 
 		/// @brief Sets the sample rate to use for interpolation
 		///
 		/// @param sampleRate - The sample rate to use for interpolation
-		inline auto setSampleRate(size_t sampleRate) noexcept -> void {
-			mSampleRate = sampleRate;
-			mLinearTransitionStep = (mTargetValue - mInitialValue)
-									/ (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds);
-			mSamplesToTransition = getSamplesToTransition();
-			mCurrentTransitionSample = 0ULL;
+		inline auto set_sample_rate(size_t sampleRate) noexcept -> void {
+			m_sample_rate = sampleRate;
+			mLinearTransitionStep
+				= (m_target_value - m_initial_value)
+				  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds);
+			m_samples_to_transition = get_samples_to_transition();
+			m_current_transition_sample = 0ULL;
 		}
 
 		constexpr auto
@@ -174,15 +178,16 @@ namespace hyperion::math {
 		static constexpr T LOG_TIME_FACTOR = gsl::narrow_cast<T>(5.0);
 		static constexpr T EXP_TIME_FACTOR = gsl::narrow_cast<T>(0.693);
 
-		size_t mSampleRate = DEFAULT_SAMPLE_RATE;
-		T mTargetValue = DEFAULT_TARGET_VALUE;
-		T mCurrentValue = DEFAULT_INITIAL_VALUE;
-		T mInitialValue = DEFAULT_INITIAL_VALUE;
-		T mTransitionLengthSeconds = DEFAULT_TRANSITION_LENGTH;
-		T mLinearTransitionStep = (mTargetValue - mInitialValue)
-								  / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds);
-		size_t mSamplesToTransition = getSamplesToTransition();
-		size_t mCurrentTransitionSample = 0;
+		size_t m_sample_rate = DEFAULT_SAMPLE_RATE;
+		T m_target_value = DEFAULT_TARGET_VALUE;
+		T m_current_value = DEFAULT_INITIAL_VALUE;
+		T m_initial_value = DEFAULT_INITIAL_VALUE;
+		T m_transition_lengthSeconds = DEFAULT_TRANSITION_LENGTH;
+		T mLinearTransitionStep
+			= (m_target_value - m_initial_value)
+			  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds);
+		size_t m_samples_to_transition = get_samples_to_transition();
+		size_t m_current_transition_sample = 0;
 
 		/// @brief Gets the interpolated value for the given sample
 		///
@@ -191,18 +196,18 @@ namespace hyperion::math {
 		/// @return The interpolated value
 		inline auto interpolate(size_t sample) noexcept -> T {
 			if constexpr(Type == InterpolationType::Linear) {
-				return linearInterpolation(sample);
+				return linear_interpolation(sample);
 			}
 			else if constexpr(Type == InterpolationType::Logarithmic) {
-				return logInterpolation(sample);
+				return log_interpolation(sample);
 			}
 			else {
-				return expInterpolation(sample);
+				return exp_interpolation(sample);
 			}
 		}
 
-		inline auto linearInterpolation(size_t sample) noexcept -> T {
-			return mInitialValue + (mLinearTransitionStep * gsl::narrow_cast<T>(sample));
+		inline auto linear_interpolation(size_t sample) noexcept -> T {
+			return m_initial_value + (mLinearTransitionStep * gsl::narrow_cast<T>(sample));
 		}
 
 		/// @brief Performs "logarithmic" interpolation.
@@ -218,13 +223,13 @@ namespace hyperion::math {
 		/// @param sample - The sample to get the interpolation value for
 		///
 		/// @return - The interpolated value
-		inline auto logInterpolation(size_t sample) noexcept -> T {
-			return (mInitialValue - mTargetValue)
+		inline auto log_interpolation(size_t sample) noexcept -> T {
+			return (m_initial_value - m_target_value)
 					   * math::Exponentials<T>::exp(
 						   -gsl::narrow_cast<T>(sample)
-						   / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds
+						   / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds
 							  / LOG_TIME_FACTOR))
-				   + mTargetValue;
+				   + m_target_value;
 		}
 
 		/// @brief Performs exponential interpolation:
@@ -236,22 +241,22 @@ namespace hyperion::math {
 		/// @param sample The sample to get the interpolation value for
 		///
 		/// @return - The interpolated value
-		inline auto expInterpolation(size_t sample) noexcept -> T {
-			return (mTargetValue - mInitialValue)
+		inline auto exp_interpolation(size_t sample) noexcept -> T {
+			return (m_target_value - m_initial_value)
 					   * (math::Exponentials<T>::exp(
 							  gsl::narrow_cast<T>(sample)
-							  / (gsl::narrow_cast<T>(mSampleRate) * mTransitionLengthSeconds
+							  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds
 								 / EXP_TIME_FACTOR))
 						  - gsl::narrow_cast<T>(1.0))
-				   + mInitialValue;
+				   + m_initial_value;
 		}
 
 		/// @brief Gets the number of samples necessary to fully complete the interpolation sequence
 		///
 		/// @return The number of samples in the interpolation sequence
-		inline auto getSamplesToTransition() noexcept -> size_t {
-			return gsl::narrow_cast<size_t>(gsl::narrow_cast<T>(mSampleRate)
-											* mTransitionLengthSeconds);
+		inline auto get_samples_to_transition() noexcept -> size_t {
+			return gsl::narrow_cast<size_t>(gsl::narrow_cast<T>(m_sample_rate)
+											* m_transition_lengthSeconds);
 		}
 	};
 
