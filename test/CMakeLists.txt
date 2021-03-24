@@ -51,17 +51,17 @@ FetchContent_MakeAvailable(HyperionMath)
 #############################################################################
 #############################################################################
 
-add_executable(HyperionMathTest "${CMAKE_SOURCE_DIR}/src/Test.cpp")
+add_executable(Test "${CMAKE_SOURCE_DIR}/src/Test.cpp")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "clang" OR APPLE)
-	set_target_properties(HyperionMathTest PROPERTIES CXX_CLANG_TIDY clang-tidy)
+	set_target_properties(Test PROPERTIES CXX_CLANG_TIDY clang-tidy)
 endif()
 
 if(MSVC)
-	target_compile_options(HyperionMathTest PRIVATE /WX /W4 /std:c++20)
+	target_compile_options(Test PRIVATE /WX /W4 /std:c++20)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "clang")
 	if(NOT WIN32)
-		target_compile_options(HyperionMathTest PRIVATE
+		target_compile_options(Test PRIVATE
 			-std=c++20
 			-Wall
 			-Wextra
@@ -75,7 +75,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL 
 			-Wno-global-constructors
 			)
 	else()
-		target_compile_options(HyperionMathTest PRIVATE
+		target_compile_options(Test PRIVATE
 			-std=c++20
 			-Wall
 			-Wextra
@@ -90,7 +90,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL 
 			)
 	endif()
 else()
-	target_compile_options(HyperionMathTest PRIVATE
+	target_compile_options(Test PRIVATE
 		-std=c++20
 		-Wall
 		-Wextra
@@ -104,19 +104,19 @@ else()
 		)
 endif()
 
-target_include_directories(HyperionMathTest BEFORE INTERFACE
+target_include_directories(Test BEFORE INTERFACE
 	"${CMAKE_SOURCE_DIR}/src"
 	)
 
 if(UNIX AND NOT APPLE)
-	target_link_libraries(HyperionMathTest PRIVATE
+	target_link_libraries(Test PRIVATE
 		curl
 		GSL
 		gtest
 		HyperionMath
 		)
 else()
-	target_link_libraries(HyperionMathTest PRIVATE
+	target_link_libraries(Test PRIVATE
 		GSL
 		gtest
 		HyperionMath
