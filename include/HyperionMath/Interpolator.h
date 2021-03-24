@@ -225,10 +225,9 @@ namespace hyperion::math {
 		/// @return - The interpolated value
 		inline auto log_interpolation(size_t sample) noexcept -> T {
 			return (m_initial_value - m_target_value)
-					   * math::Exponentials<T>::exp(
-						   -gsl::narrow_cast<T>(sample)
-						   / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds
-							  / LOG_TIME_FACTOR))
+					   * math::Exponentials::exp(-gsl::narrow_cast<T>(sample)
+												 / (gsl::narrow_cast<T>(m_sample_rate)
+													* m_transition_lengthSeconds / LOG_TIME_FACTOR))
 				   + m_target_value;
 		}
 
@@ -243,7 +242,7 @@ namespace hyperion::math {
 		/// @return - The interpolated value
 		inline auto exp_interpolation(size_t sample) noexcept -> T {
 			return (m_target_value - m_initial_value)
-					   * (math::Exponentials<T>::exp(
+					   * (math::Exponentials::exp(
 							  gsl::narrow_cast<T>(sample)
 							  / (gsl::narrow_cast<T>(m_sample_rate) * m_transition_lengthSeconds
 								 / EXP_TIME_FACTOR))
