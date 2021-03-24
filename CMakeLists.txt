@@ -83,22 +83,22 @@ else()
 endif()
 
 target_include_directories(HyperionMath BEFORE INTERFACE
-	"${CMAKE_SOURCE_DIR}/include"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include"
 	)
 
 ###### We add headers to sources sets because it helps with `#include` lookup for some tooling #####
 
 set(EXPORTS
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/Exponentials.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/General.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/Interpolator.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/Point2.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/Point3.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/Random.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/TrigFuncs.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/Vec2.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/Vec3.h"
-	"${CMAKE_SOURCE_DIR}/include/HyperionMath/HyperionMath.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Exponentials.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/General.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Interpolator.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Point2.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Point3.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Random.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/TrigFuncs.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Vec2.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/Vec3.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/HyperionMath/HyperionMath.h"
 	)
 
 target_sources(HyperionMath INTERFACE
