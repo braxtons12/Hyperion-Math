@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 include(FetchContent)
 
-project(HyperionUtilsTest VERSION 0.1.0)
+project(HyperionMathTest VERSION 0.1.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
